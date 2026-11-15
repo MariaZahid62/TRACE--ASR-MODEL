@@ -75,7 +75,7 @@ git lfs install
 
 ```powershell
 git clone https://github.com/MariaZahid62/TRACE--ASR-MODEL.git
-cd TRACE
+cd TRACE--ASR-MODEL
 git lfs pull
 ```
 
