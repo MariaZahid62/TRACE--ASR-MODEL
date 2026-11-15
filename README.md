@@ -74,7 +74,7 @@ git lfs install
 ### 2. Clone the repository and download the checkpoint
 
 ```powershell
-git clone https://github.com/MariaZahid62/TRACE.git
+git clone https://github.com/MariaZahid62/TRACE--ASR-MODEL.git
 cd TRACE
 git lfs pull
 ```
