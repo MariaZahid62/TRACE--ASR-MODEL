@@ -5,11 +5,13 @@ Training entry point for DeepSpeech-Lite.
 Usage:
     python -m src.train --config configs/config.yaml
     python -m src.train --config configs/config.yaml --eval-only --checkpoint checkpoints/best.pt
+    python -m src.train --config configs/config.yaml --checkpoint checkpoints/last.pt
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import torch
@@ -45,7 +47,6 @@ def build_dataloaders(cfg: dict):
         cfg["data"]["root"], cfg["data"]["dev_split"], fe
     )
 
-    # Limit dataset size for small training experiments
     train_samples = cfg["training"].get("train_samples")
     dev_samples = cfg["training"].get("dev_samples")
 
@@ -97,9 +98,14 @@ def evaluate(model, dev_loader, device, criterion):
             log_probs, output_lengths = model(
                 features, input_lengths.to(device)
             )
+
             loss = criterion(
-                log_probs, targets, output_lengths.cpu(), target_lengths
+                log_probs,
+                targets,
+                output_lengths.cpu(),
+                target_lengths,
             )
+
             loss_meter.update(loss.item(), n=features.size(0))
 
             hyps = greedy_decode(log_probs.cpu(), output_lengths.cpu())
@@ -107,11 +113,13 @@ def evaluate(model, dev_loader, device, criterion):
             all_refs.extend([t.lower() for t in transcripts])
 
     wer, cer = batch_wer_cer(all_hyps, all_refs)
+
     return loss_meter.avg, wer, cer
 
 
 def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
     set_seed(cfg["training"]["seed"])
+
     device = get_device()
     print(f"Using device: {device}")
 
@@ -127,6 +135,8 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
         dropout=cfg["model"]["dropout"],
     ).to(device)
 
+    state = None
+
     if checkpoint:
         state = torch.load(checkpoint, map_location=device)
         model.load_state_dict(state["model_state_dict"])
@@ -135,8 +145,13 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
     criterion = nn.CTCLoss(blank=0, zero_infinity=True)
 
     if eval_only:
-        loss, wer, cer = evaluate(model, dev_loader, device, criterion)
-        print(f"[eval-only] loss={loss:.4f} WER={wer:.3f} CER={cer:.3f}")
+        loss, wer, cer = evaluate(
+            model, dev_loader, device, criterion
+        )
+        print(
+            f"[eval-only] loss={loss:.4f} "
+            f"WER={wer:.3f} CER={cer:.3f}"
+        )
         return
 
     optimizer = torch.optim.AdamW(
@@ -158,10 +173,62 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
     ckpt_dir = Path(cfg["training"]["checkpoint_dir"])
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-    history = {"train_loss": [], "dev_loss": [], "wer": [], "cer": []}
-    best_wer = float("inf")
+    history_path = ckpt_dir / "history.json"
 
-    for epoch in range(1, cfg["training"]["epochs"] + 1):
+    history = {
+        "train_loss": [],
+        "dev_loss": [],
+        "wer": [],
+        "cer": [],
+    }
+
+    if history_path.exists():
+        with open(history_path, "r") as f:
+            history = json.load(f)
+
+    start_epoch = 1
+    best_wer = (
+        min(history["wer"])
+        if history["wer"]
+        else float("inf")
+    )
+
+    if state is not None:
+        start_epoch = state.get("epoch", 0) + 1
+
+        if (
+            "optimizer_state_dict" in state
+            and "scheduler_state_dict" in state
+        ):
+            optimizer.load_state_dict(
+                state["optimizer_state_dict"]
+            )
+            scheduler.load_state_dict(
+                state["scheduler_state_dict"]
+            )
+
+            if "scaler_state_dict" in state:
+                scaler.load_state_dict(
+                    state["scaler_state_dict"]
+                )
+
+            print("Optimizer and scheduler states restored.")
+        else:
+            print(
+                "Old checkpoint: model weights restored; "
+                "optimizer starts fresh."
+            )
+
+        if "best_wer" in state:
+            best_wer = min(best_wer, state["best_wer"])
+
+    print(f"Starting from epoch {start_epoch}")
+    print(f"Best previous WER: {best_wer:.3f}")
+
+    for epoch in range(
+        start_epoch,
+        cfg["training"]["epochs"] + 1,
+    ):
         model.train()
         loss_meter = AverageMeter()
 
@@ -171,7 +238,11 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
         )
 
         for step, (
-            features, targets, input_lengths, target_lengths, _
+            features,
+            targets,
+            input_lengths,
+            target_lengths,
+            _,
         ) in enumerate(pbar):
 
             features = features.to(device)
@@ -183,36 +254,53 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
                 enabled=cfg["training"]["amp"] and device.type == "cuda"
             ):
                 log_probs, output_lengths = model(
-                    features, input_lengths.to(device)
+                    features,
+                    input_lengths.to(device),
                 )
+
                 loss = criterion(
-                    log_probs, targets, output_lengths.cpu(), target_lengths
+                    log_probs,
+                    targets,
+                    output_lengths.cpu(),
+                    target_lengths,
                 )
 
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
 
             torch.nn.utils.clip_grad_norm_(
-                model.parameters(), cfg["training"]["grad_clip"]
+                model.parameters(),
+                cfg["training"]["grad_clip"],
             )
 
             scaler.step(optimizer)
             scaler.update()
 
-            loss_meter.update(loss.item(), n=features.size(0))
+            loss_meter.update(
+                loss.item(),
+                n=features.size(0),
+            )
 
             if step % cfg["training"]["log_every_n_steps"] == 0:
-                pbar.set_postfix(loss=f"{loss_meter.avg:.4f}")
+                pbar.set_postfix(
+                    loss=f"{loss_meter.avg:.4f}"
+                )
 
         scheduler.step()
 
         dev_loss, wer, cer = evaluate(
-            model, dev_loader, device, criterion
+            model,
+            dev_loader,
+            device,
+            criterion,
         )
 
         print(
-            f"Epoch {epoch}: train_loss={loss_meter.avg:.4f} "
-            f"dev_loss={dev_loss:.4f} WER={wer:.3f} CER={cer:.3f}"
+            f"Epoch {epoch}: "
+            f"train_loss={loss_meter.avg:.4f} "
+            f"dev_loss={dev_loss:.4f} "
+            f"WER={wer:.3f} "
+            f"CER={cer:.3f}"
         )
 
         history["train_loss"].append(loss_meter.avg)
@@ -220,16 +308,7 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
         history["wer"].append(wer)
         history["cer"].append(cer)
 
-        save_history(history, ckpt_dir / "history.json")
-
-        torch.save(
-            {
-                "model_state_dict": model.state_dict(),
-                "epoch": epoch,
-                "cfg": cfg,
-            },
-            ckpt_dir / "last.pt",
-        )
+        save_history(history, history_path)
 
         if wer < best_wer:
             best_wer = wer
@@ -237,30 +316,64 @@ def train(cfg: dict, eval_only: bool = False, checkpoint: str | None = None):
             torch.save(
                 {
                     "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "scheduler_state_dict": scheduler.state_dict(),
+                    "scaler_state_dict": scaler.state_dict(),
                     "epoch": epoch,
+                    "best_wer": best_wer,
                     "cfg": cfg,
                 },
                 ckpt_dir / "best.pt",
             )
 
             print(
-            f"  -> new best WER {wer:.3f}, "
-            f"saved {ckpt_dir / 'best.pt'}"
+                f"  -> new best WER {wer:.3f}, saved best.pt"
             )
+
+        torch.save(
+            {
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "scheduler_state_dict": scheduler.state_dict(),
+                "scaler_state_dict": scaler.state_dict(),
+                "epoch": epoch,
+                "best_wer": best_wer,
+                "cfg": cfg,
+            },
+            ckpt_dir / "last.pt",
+        )
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="configs/config.yaml")
-    parser.add_argument("--eval-only", action="store_true")
-    parser.add_argument("--checkpoint", type=str, default=None)
+
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/config.yaml",
+    )
+
+    parser.add_argument(
+        "--eval-only",
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "--checkpoint",
+        type=str,
+        default=None,
+    )
 
     args = parser.parse_args()
 
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 
-    train(cfg, eval_only=args.eval_only, checkpoint=args.checkpoint)
+    train(
+        cfg,
+        eval_only=args.eval_only,
+        checkpoint=args.checkpoint,
+    )
 
 
 if __name__ == "__main__":

@@ -21,18 +21,22 @@ model:
   dropout: 0.1
 
 training:
-  batch_size: 16
-  num_workers: 4
-  epochs: 40
   lr: 0.0003
   weight_decay: 0.00001
   grad_clip: 5.0
   scheduler_step: 5
   scheduler_gamma: 0.7
   seed: 42
-  checkpoint_dir: "checkpoints"
+  checkpoint_dir: "checkpoints_2000_resume"
   log_every_n_steps: 50
-  amp: true                    # mixed precision training
+  amp: true  
+  
+  train_samples: 4000
+  dev_samples: 500
+  batch_size: 16
+  num_workers: 0
+  epochs: 2
+  checkpoint_dir: "checkpoints_4000"                  # mixed precision training
 
 decoding:
   method: "greedy"             # "greedy" or "beam" (beam requires ctcdecode/kenlm, not included)
