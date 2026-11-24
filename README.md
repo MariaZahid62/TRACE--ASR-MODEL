@@ -26,7 +26,6 @@ TRACE does not call cloud speech-recognition APIs.
 ```text
 TRACE/
 ├── app.py
-├── app_backup.py
 ├── requirements.txt
 ├── .gitattributes
 ├── .gitignore
