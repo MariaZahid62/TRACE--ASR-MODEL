@@ -264,24 +264,6 @@ python -m src.train --config configs/english_2000_config.yaml
 
 Training can take a long time on a CPU-only computer. It is not part of the normal setup process.
 
-## Model and Evaluation Notes
-
-The included `checkpoints_2000/best.pt` is the selected checkpoint from the 2000-sample experiment.
-
-The training history is saved in:
-
-```text
-checkpoints_2000/history.json
-```
-
-The experiment's validation results were approximately:
-
-- Epoch 1 validation WER: 1.042
-- Epoch 2 validation WER: 1.066
-- Epoch 2 validation CER: 0.599
-
-These results show that the model is an experimental prototype and that transcription accuracy is still a limitation.
-
 ## Troubleshooting
 
 **The app says the checkpoint is missing**
