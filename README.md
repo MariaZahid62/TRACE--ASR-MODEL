@@ -654,3 +654,17 @@ TRACE currently focuses on:
 - PDF and DOCX export.
 - Modular local application architecture.
 
+---
+
+## 15. Authors
+
+Maria Zahid (Roll No. 062)
+Usman Ahmed (Roll No. 134)
+
+Department of Computer Science
+Bahria University Islamabad, Pakistan
+
+Course: AI 5C
+Instructor: Ms. Afrah Naeem Najmi
+
+Project: TRACE – An Offline Speech-to-Text and Meeting Report System Built from Scratch
