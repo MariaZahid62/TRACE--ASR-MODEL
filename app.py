@@ -2,6 +2,7 @@
 import gradio as gr
 import torch
 import torchaudio
+import json
 import soundfile as sf
 from pathlib import Path
 
@@ -11,35 +12,19 @@ from src.model import DeepSpeechLite
 from src.utils import get_device
 
 
-CHECKPOINT_PATH = "checkpoints_2000/best.pt"
+CHECKPOINT_PATH = "checkpoints_2000/best_backup.pt"
 DATA_DIR = Path("data/LibriSpeech/dev-clean")
 
 device = get_device()
 
+def load_demo_recordings():
+    config_path = Path("configs/demo_recordings.json")
 
-DEMO_RECORDINGS = {
-    "Recording 001": {
-        "file": "3170/137482/3170-137482-0013.flac",
-        "transcript": "WHERE IS MY HUSBAND"
-    },
-    "Recording 002": {
-        "file": "6313/66125/6313-66125-0012.flac",
-        "transcript": "ARE YOU READY YES"
-    },
-    "Recording 003": {
-        "file": "8297/275154/8297-275154-0022.flac",
-        "transcript": "YOU CAN'T DO IT"
-    },
-    "Recording 004": {
-        "file": "5895/34622/5895-34622-0002.flac",
-        "transcript": "WHAT WAS THIS NOTHING"
-    },
-    "Recording 005": {
-        "file": "3081/166546/3081-166546-0018.flac",
-        "transcript": "WHAT DOES HE WANT"
-    }
-}
+    with open(config_path, "r", encoding="utf-8") as file:
+        return json.load(file)
 
+
+DEMO_RECORDINGS = load_demo_recordings()
 
 def load_model():
     if not Path(CHECKPOINT_PATH).exists():
@@ -82,7 +67,7 @@ def load_demo(recording):
 
 def transcribe_audio(audio_path):
     if model is None:
-        return "Checkpoint not found. Please check checkpoints_2000/best.pt."
+        return "Checkpoint not found. Please check checkpoints_2000/best_backup.pt."
 
     if audio_path is None:
         return "Please upload or record audio first."
