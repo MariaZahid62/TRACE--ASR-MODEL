@@ -1,0 +1,60 @@
+TRACE - TEST MEETING REPORT
+============================================================
+
+SUMMARY
+------------------------------------------------------------
+- We've been receiving some feedback about the office environment, and I thought we could share a few ideas.
+- The office cafeteria has been getting really crowded during lunch breaks.
+- That's true, but I think the bigger issue is that everyone takes lunch at the same time.
+- We can't just randomly assign everyone different timings.
+- We have three rooms, but people keep booking them and then not showing up.
+
+DECISIONS
+------------------------------------------------------------
+No items detected.
+
+DISCUSSION
+------------------------------------------------------------
+- If you don't need the room anymore, just cancel the booking.
+- Maybe we can introduce automatic reminders before each booking.
+- Nobody wants another application to manage.
+- I think people are getting a little tired lately.
+- There's been a lot of work, and we haven't had any team activities for months.
+- We could arrange a team lunch or maybe a casual Friday activity.
+- Team lunch sounds good, but we always end up ordering the same food.
+- Maybe this time we can collect suggestions from everyone and choose something different.
+
+DEADLINES
+------------------------------------------------------------
+No items detected.
+
+IMPORTANT DATES
+------------------------------------------------------------
+No items detected.
+
+PEOPLE
+------------------------------------------------------------
+- Emma
+- Patrick
+- Ryan
+- Noor
+- Faisal
+
+KEYWORDS
+------------------------------------------------------------
+- lunch
+- team
+- room
+- office
+- booking
+- department
+- work
+- rooms
+- nobody
+- make
+- laughs
+- introduce
+
+ACTION ITEMS
+------------------------------------------------------------
+No action items detected.

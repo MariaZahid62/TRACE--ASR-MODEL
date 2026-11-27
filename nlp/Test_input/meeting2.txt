@@ -1,0 +1,89 @@
+Daniel: Okay, everyone, let's get started. We have about four weeks left before the application launch, and I want to make sure all the remaining tasks are assigned properly. Zara, can you give us an update on the design?
+
+Zara: Yeah, so the homepage and product pages are almost finished. I'm still working on the checkout screen because the client requested a few changes last Friday.
+
+Daniel: What kind of changes?
+
+Zara: They want an additional payment option and a slightly different layout for the order summary. Nothing too major, but it will take another two days.
+
+Hamza: Wait, does that mean the API requirements are changing too?
+
+Zara: Probably just the payment integration section. I'll send you the updated design today.
+
+Hamza: Okay, but I need the final design before Thursday. Otherwise, I can't complete the integration on schedule.
+
+Daniel: Alright, let's make that clear. Zara, your deadline for the final checkout design is Wednesday, November 4th. Can you manage that?
+
+Zara: Yes, I'll send the final version by Wednesday afternoon.
+
+Daniel: Good. Hamza, once you receive it, you'll handle the payment integration and complete the remaining backend development. What's your expected completion date?
+
+Hamza: I can finish the payment integration by November 9th. The remaining backend work should be completed by November 11th.
+
+Daniel: Okay, I'm noting both dates. Chris, what about testing?
+
+Chris: I've already started testing the login and registration features. I found three minor bugs, which I've shared with Hamza. The main issue is that the password reset email sometimes takes too long to arrive.
+
+Hamza: Yeah, I checked that yesterday. It seems to be related to the email service configuration.
+
+Chris: Can you fix that by Friday?
+
+Hamza: I should be able to.
+
+Daniel: Let's assign that as a separate task. Hamza, resolve the password reset issue by November 6th. Chris, retest it on November 7th.
+
+Chris: Okay, that's fine.
+
+Olivia: Sorry, can I bring up the marketing side? We need to start preparing the launch campaign. I haven't received the final screenshots or product demonstration video yet.
+
+Zara: I can provide the screenshots after the design is approved.
+
+Olivia: That's fine, but I need them by November 12th at the latest. We also need a short demonstration video.
+
+Daniel: Who's responsible for that?
+
+Olivia: I'll coordinate the video production, but I'll need technical support from Hamza to explain the main features.
+
+Hamza: Sure, I can help. Just let me know when.
+
+Daniel: Okay, Olivia is responsible for the launch campaign and video coordination. Hamza will provide technical support. Let's set November 16th as the campaign preparation deadline.
+
+Olivia: That works.
+
+Daniel: What about the application testing schedule, Chris?
+
+Chris: I want at least five working days for complete testing. We need to check payment processing, user registration, product searches, notifications, and the checkout process.
+
+Daniel: Fine. When can you start full testing?
+
+Chris: November 12th, assuming development is complete by November 11th.
+
+Hamza: That should be possible, but I can't guarantee that there won't be any last-minute fixes.
+
+Chris: That's why I want a buffer day.
+
+Daniel: Fair enough. We'll schedule full testing from November 12th to November 18th, with November 19th and 20th reserved for corrections.
+
+Zara: What about the final approval from the client? Who's arranging that?
+
+Daniel: I'll handle client communication and arrange the final demonstration on November 23rd.
+
+Olivia: And when is the actual launch?
+
+Daniel: We're targeting November 27th, assuming testing and client approval are completed on time.
+
+Chris: That's a little tight, but manageable.
+
+Hamza: I agree, as long as we don't receive another major design change.
+
+(laughs)
+
+Daniel: Let's hope not. Okay, before we finish, I'll quickly review the assignments.
+
+Zara: Final checkout design by November 4th.
+
+Hamza: Password reset fix by November 6th, payment integration by November 9th, and backend completion by November 11th.
+
+Chris: Full application testing from November 12th to November 18th, followed by corrections.
+
+Olivia: Marketing campaign preparation by

@@ -1,0 +1,95 @@
+TRACE - TEST MEETING REPORT
+============================================================
+
+SUMMARY
+------------------------------------------------------------
+- The main agenda today is the proposed employee recruitment policy and its financial implications.
+- The HR department is proposing a revised recruitment process.
+- The main changes include standardized interviews, a minimum of two interviewers for each shortlisted candidate, and a formal evaluation form.
+- We also want to introduce a background verification process before final appointments.
+- The estimated implementation cost is approximately 350,000 rupees, including training and documentation.
+
+DECISIONS
+------------------------------------------------------------
+- Minutes of the previous meeting approved unanimously.
+- Department-specific practical assessments for technical vacancies approved unanimously.
+- Revised employee recruitment policy, including the amendment, approved with four votes in favor and one abstention.
+- Policy implementation scheduled for December 1st.
+- Agreed to review implementation costs after the first quarter at the next quarterly review.
+
+DISCUSSION
+------------------------------------------------------------
+No items detected.
+
+DEADLINES
+------------------------------------------------------------
+- November 25th
+- within two working days
+- after the first quarter
+
+IMPORTANT DATES
+------------------------------------------------------------
+- December 1st
+- November 25th
+- within two working days
+- after the first quarter
+
+PEOPLE
+------------------------------------------------------------
+- Robert
+- Elizabeth
+- Michael
+- Susan
+- Ahmed
+
+KEYWORDS
+------------------------------------------------------------
+- policy
+- recruitment
+- amendment
+- implementation
+- technical
+- revised
+- process
+- final
+- training
+- documentation
+- cost
+- assessment
+
+ACTION ITEMS
+------------------------------------------------------------
+Task 1
+Person: Susan
+Task: present the proposed recruitment policy
+Deadline: Not specified
+Confidence: 0.80
+Original sentence: Susan, please present the proposed recruitment policy.
+
+Task 2
+Person: Elizabeth
+Task: record that in the minutes
+Deadline: Not specified
+Confidence: 0.80
+Original sentence: Elizabeth: I'll record that in the minutes.
+
+Task 3
+Person: Unknown
+Task: complete final documentation
+Deadline: November 25th
+Confidence: 0.65
+Original sentence: Susan: We propose December 1st, provided the final documentation is completed by November 25th.
+
+Task 4
+Person: Elizabeth
+Task: circulate the final policy document and meeting minutes
+Deadline: within two working days
+Confidence: 0.90
+Original sentence: Elizabeth: I'll circulate the final policy document and meeting minutes within two working days.
+
+Task 5
+Person: Unknown
+Task: review the implementation costs after the first quarter
+Deadline: after the first quarter
+Confidence: 0.65
+Original sentence: We should review the implementation costs after the first quarter.
